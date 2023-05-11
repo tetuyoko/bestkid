@@ -6,6 +6,11 @@ This is the associated repo for the blog post which can be found here:
 
 https://hasura.io/blog/testing-hasura-graphql-apis-with-karate/
 
+### NOTICE
+
+If you use mac silicon, you must enable virtualize Intel containers with Rosetta.
+https://applech2.com/archives/20230114-docker-for-mac-support-rosetta-2-beta.html
+
 ### First load up your sample Hasura API:
 
 ```
