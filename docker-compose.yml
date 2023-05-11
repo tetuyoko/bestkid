@@ -1,0 +1,101 @@
+version: "3.6"
+services:
+  postgres:
+    image: postgres:15
+    restart: always
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: postgrespassword
+
+  graphql-engine:
+    image: hasura/graphql-engine:v2.24.1
+    ports:
+      - "8080:8080"
+    restart: always
+    environment:
+      ## postgres database to store Hasura metadata
+      HASURA_GRAPHQL_METADATA_DATABASE_URL: postgres://postgres:postgrespassword@postgres:5432/postgres
+      ## this env var can be used to add the above postgres database to Hasura as a data source. this can be removed/updated based on your needs
+      PG_DATABASE_URL: postgres://postgres:postgrespassword@postgres:5432/postgres
+      ## enable the console served by server
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true" # set to "false" to disable console
+      ## enable debugging mode. It is recommended to disable this in production
+      HASURA_GRAPHQL_DEV_MODE: "true"
+      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
+      ## uncomment next line to run console offline (i.e load console assets from server instead of CDN)
+      # HASURA_GRAPHQL_CONSOLE_ASSETS_DIR: /srv/console-assets
+      ## uncomment next line to set an admin secret
+      # HASURA_GRAPHQL_ADMIN_SECRET: myadminsecretkey
+      HASURA_GRAPHQL_METADATA_DEFAULTS: '{"backend_configs":{"dataconnector":{"athena":{"uri":"http://data-connector-agent:8081/api/v1/athena"},"mariadb":{"uri":"http://data-connector-agent:8081/api/v1/mariadb"},"mysql8":{"uri":"http://data-connector-agent:8081/api/v1/mysql"},"oracle":{"uri":"http://data-connector-agent:8081/api/v1/oracle"},"snowflake":{"uri":"http://data-connector-agent:8081/api/v1/snowflake"}}}}'
+    volumes:
+      - ./hasura/migrations:/hasura-migrations
+      - ./hasura/metadata:/hasura-metadata
+    healthcheck:
+      test: timeout 1s bash -c ':> /dev/tcp/127.0.0.1/8080' || exit 1
+    depends_on:
+      data-connector-agent:
+        condition: service_healthy
+
+  hasura-console:
+    image: hasura/graphql-engine:v2.24.1.cli-migrations-v3
+    volumes:
+      - ./hasura:/app
+    healthcheck:
+      test: timeout 1s bash -c ':> /dev/tcp/127.0.0.1/9695' || exit 1
+    working_dir: /app
+    command: hasura-cli console --no-browser --endpoint http://graphql-engine:8080 --address 0.0.0.0 --console-port 9695 --api-port 9693 --console-hge-endpoint http://graphql-engine:8080
+    ports:
+      - '9695:9695'
+      - '9693:9693'
+    depends_on:
+      data-connector-agent:
+        condition: service_healthy
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:postgrespassword@postgres:5432/postgres
+      PG_DATABASE_URL: postgres://postgres:postgrespassword@postgres:5432/postgres
+
+  data-connector-agent:
+    image: hasura/graphql-data-connector:v2.23.0
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      QUARKUS_LOG_LEVEL: ERROR # FATAL, ERROR, WARN, INFO, DEBUG, TRACE
+      ## https://quarkus.io/guides/opentelemetry#configuration-reference
+      QUARKUS_OPENTELEMETRY_ENABLED: "false"
+      ## QUARKUS_OPENTELEMETRY_TRACER_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "curl",
+          "-f",
+          "http://localhost:8081/api/v1/athena/health"
+        ]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+      start_period: 5s
+
+  karate:
+    image: ptrthomas/karate-chrome
+    command: ./src/entrypoint.sh
+    cap_add:
+      - SYS_ADMIN
+    init: true
+    ports:
+      - "5900:5900"
+    volumes:
+      # Tests to be run:
+      - ./karate/features:/src/features
+      # Where results will be generated:
+      - ./karate/results:/src/results
+      # Run test suit:
+      - ./karate/entrypoint.sh:/src/entrypoint.sh
+    depends_on:
+      data-connector-agent:
+        condition: service_healthy
+
+volumes:
+  db_data:
