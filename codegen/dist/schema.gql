@@ -1,0 +1,1169 @@
+schema {
+  query: query_root
+  mutation: mutation_root
+  subscription: subscription_root
+}
+
+"""whether this query should be cached (Hasura Cloud only)"""
+directive @cached(
+  """refresh the cache entry"""
+  refresh: Boolean! = false
+
+  """measured in seconds"""
+  ttl: Int! = 60
+) on QUERY
+
+"""
+Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'.
+"""
+input Int_comparison_exp {
+  _eq: Int
+  _gt: Int
+  _gte: Int
+  _in: [Int!]
+  _is_null: Boolean
+  _lt: Int
+  _lte: Int
+  _neq: Int
+  _nin: [Int!]
+}
+
+"""
+Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'.
+"""
+input String_comparison_exp {
+  _eq: String
+  _gt: String
+  _gte: String
+
+  """does the column match the given case-insensitive pattern"""
+  _ilike: String
+  _in: [String!]
+
+  """
+  does the column match the given POSIX regular expression, case insensitive
+  """
+  _iregex: String
+  _is_null: Boolean
+
+  """does the column match the given pattern"""
+  _like: String
+  _lt: String
+  _lte: String
+  _neq: String
+
+  """does the column NOT match the given case-insensitive pattern"""
+  _nilike: String
+  _nin: [String!]
+
+  """
+  does the column NOT match the given POSIX regular expression, case insensitive
+  """
+  _niregex: String
+
+  """does the column NOT match the given pattern"""
+  _nlike: String
+
+  """
+  does the column NOT match the given POSIX regular expression, case sensitive
+  """
+  _nregex: String
+
+  """does the column NOT match the given SQL regular expression"""
+  _nsimilar: String
+
+  """
+  does the column match the given POSIX regular expression, case sensitive
+  """
+  _regex: String
+
+  """does the column match the given SQL regular expression"""
+  _similar: String
+}
+
+"""
+columns and relationships of "cms.post"
+"""
+type cms_post {
+  author_id: Int!
+  content: String!
+  created_at: timestamptz!
+  id: Int!
+  status: String!
+  title: String!
+
+  """An object relationship"""
+  user: cms_user!
+}
+
+"""
+aggregated selection of "cms.post"
+"""
+type cms_post_aggregate {
+  aggregate: cms_post_aggregate_fields
+  nodes: [cms_post!]!
+}
+
+input cms_post_aggregate_bool_exp {
+  count: cms_post_aggregate_bool_exp_count
+}
+
+input cms_post_aggregate_bool_exp_count {
+  arguments: [cms_post_select_column!]
+  distinct: Boolean
+  filter: cms_post_bool_exp
+  predicate: Int_comparison_exp!
+}
+
+"""
+aggregate fields of "cms.post"
+"""
+type cms_post_aggregate_fields {
+  avg: cms_post_avg_fields
+  count(columns: [cms_post_select_column!], distinct: Boolean): Int!
+  max: cms_post_max_fields
+  min: cms_post_min_fields
+  stddev: cms_post_stddev_fields
+  stddev_pop: cms_post_stddev_pop_fields
+  stddev_samp: cms_post_stddev_samp_fields
+  sum: cms_post_sum_fields
+  var_pop: cms_post_var_pop_fields
+  var_samp: cms_post_var_samp_fields
+  variance: cms_post_variance_fields
+}
+
+"""
+order by aggregate values of table "cms.post"
+"""
+input cms_post_aggregate_order_by {
+  avg: cms_post_avg_order_by
+  count: order_by
+  max: cms_post_max_order_by
+  min: cms_post_min_order_by
+  stddev: cms_post_stddev_order_by
+  stddev_pop: cms_post_stddev_pop_order_by
+  stddev_samp: cms_post_stddev_samp_order_by
+  sum: cms_post_sum_order_by
+  var_pop: cms_post_var_pop_order_by
+  var_samp: cms_post_var_samp_order_by
+  variance: cms_post_variance_order_by
+}
+
+"""
+input type for inserting array relation for remote table "cms.post"
+"""
+input cms_post_arr_rel_insert_input {
+  data: [cms_post_insert_input!]!
+
+  """upsert condition"""
+  on_conflict: cms_post_on_conflict
+}
+
+"""aggregate avg on columns"""
+type cms_post_avg_fields {
+  author_id: Float
+  id: Float
+}
+
+"""
+order by avg() on columns of table "cms.post"
+"""
+input cms_post_avg_order_by {
+  author_id: order_by
+  id: order_by
+}
+
+"""
+Boolean expression to filter rows from the table "cms.post". All fields are combined with a logical 'AND'.
+"""
+input cms_post_bool_exp {
+  _and: [cms_post_bool_exp!]
+  _not: cms_post_bool_exp
+  _or: [cms_post_bool_exp!]
+  author_id: Int_comparison_exp
+  content: String_comparison_exp
+  created_at: timestamptz_comparison_exp
+  id: Int_comparison_exp
+  status: String_comparison_exp
+  title: String_comparison_exp
+  user: cms_user_bool_exp
+}
+
+"""
+unique or primary key constraints on table "cms.post"
+"""
+enum cms_post_constraint {
+  """
+  unique or primary key constraint on columns "id"
+  """
+  posts_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "cms.post"
+"""
+input cms_post_inc_input {
+  author_id: Int
+  id: Int
+}
+
+"""
+input type for inserting data into table "cms.post"
+"""
+input cms_post_insert_input {
+  author_id: Int
+  content: String
+  created_at: timestamptz
+  id: Int
+  status: String
+  title: String
+  user: cms_user_obj_rel_insert_input
+}
+
+"""aggregate max on columns"""
+type cms_post_max_fields {
+  author_id: Int
+  content: String
+  created_at: timestamptz
+  id: Int
+  status: String
+  title: String
+}
+
+"""
+order by max() on columns of table "cms.post"
+"""
+input cms_post_max_order_by {
+  author_id: order_by
+  content: order_by
+  created_at: order_by
+  id: order_by
+  status: order_by
+  title: order_by
+}
+
+"""aggregate min on columns"""
+type cms_post_min_fields {
+  author_id: Int
+  content: String
+  created_at: timestamptz
+  id: Int
+  status: String
+  title: String
+}
+
+"""
+order by min() on columns of table "cms.post"
+"""
+input cms_post_min_order_by {
+  author_id: order_by
+  content: order_by
+  created_at: order_by
+  id: order_by
+  status: order_by
+  title: order_by
+}
+
+"""
+response of any mutation on the table "cms.post"
+"""
+type cms_post_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [cms_post!]!
+}
+
+"""
+on_conflict condition type for table "cms.post"
+"""
+input cms_post_on_conflict {
+  constraint: cms_post_constraint!
+  update_columns: [cms_post_update_column!]! = []
+  where: cms_post_bool_exp
+}
+
+"""Ordering options when selecting data from "cms.post"."""
+input cms_post_order_by {
+  author_id: order_by
+  content: order_by
+  created_at: order_by
+  id: order_by
+  status: order_by
+  title: order_by
+  user: cms_user_order_by
+}
+
+"""primary key columns input for table: cms.post"""
+input cms_post_pk_columns_input {
+  id: Int!
+}
+
+"""
+select columns of table "cms.post"
+"""
+enum cms_post_select_column {
+  """column name"""
+  author_id
+
+  """column name"""
+  content
+
+  """column name"""
+  created_at
+
+  """column name"""
+  id
+
+  """column name"""
+  status
+
+  """column name"""
+  title
+}
+
+"""
+input type for updating data in table "cms.post"
+"""
+input cms_post_set_input {
+  author_id: Int
+  content: String
+  created_at: timestamptz
+  id: Int
+  status: String
+  title: String
+}
+
+"""aggregate stddev on columns"""
+type cms_post_stddev_fields {
+  author_id: Float
+  id: Float
+}
+
+"""
+order by stddev() on columns of table "cms.post"
+"""
+input cms_post_stddev_order_by {
+  author_id: order_by
+  id: order_by
+}
+
+"""aggregate stddev_pop on columns"""
+type cms_post_stddev_pop_fields {
+  author_id: Float
+  id: Float
+}
+
+"""
+order by stddev_pop() on columns of table "cms.post"
+"""
+input cms_post_stddev_pop_order_by {
+  author_id: order_by
+  id: order_by
+}
+
+"""aggregate stddev_samp on columns"""
+type cms_post_stddev_samp_fields {
+  author_id: Float
+  id: Float
+}
+
+"""
+order by stddev_samp() on columns of table "cms.post"
+"""
+input cms_post_stddev_samp_order_by {
+  author_id: order_by
+  id: order_by
+}
+
+"""
+Streaming cursor of the table "cms_post"
+"""
+input cms_post_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: cms_post_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input cms_post_stream_cursor_value_input {
+  author_id: Int
+  content: String
+  created_at: timestamptz
+  id: Int
+  status: String
+  title: String
+}
+
+"""aggregate sum on columns"""
+type cms_post_sum_fields {
+  author_id: Int
+  id: Int
+}
+
+"""
+order by sum() on columns of table "cms.post"
+"""
+input cms_post_sum_order_by {
+  author_id: order_by
+  id: order_by
+}
+
+"""
+update columns of table "cms.post"
+"""
+enum cms_post_update_column {
+  """column name"""
+  author_id
+
+  """column name"""
+  content
+
+  """column name"""
+  created_at
+
+  """column name"""
+  id
+
+  """column name"""
+  status
+
+  """column name"""
+  title
+}
+
+input cms_post_updates {
+  """increments the numeric columns with given value of the filtered values"""
+  _inc: cms_post_inc_input
+
+  """sets the columns of the filtered rows to the given values"""
+  _set: cms_post_set_input
+
+  """filter the rows which have to be updated"""
+  where: cms_post_bool_exp!
+}
+
+"""aggregate var_pop on columns"""
+type cms_post_var_pop_fields {
+  author_id: Float
+  id: Float
+}
+
+"""
+order by var_pop() on columns of table "cms.post"
+"""
+input cms_post_var_pop_order_by {
+  author_id: order_by
+  id: order_by
+}
+
+"""aggregate var_samp on columns"""
+type cms_post_var_samp_fields {
+  author_id: Float
+  id: Float
+}
+
+"""
+order by var_samp() on columns of table "cms.post"
+"""
+input cms_post_var_samp_order_by {
+  author_id: order_by
+  id: order_by
+}
+
+"""aggregate variance on columns"""
+type cms_post_variance_fields {
+  author_id: Float
+  id: Float
+}
+
+"""
+order by variance() on columns of table "cms.post"
+"""
+input cms_post_variance_order_by {
+  author_id: order_by
+  id: order_by
+}
+
+"""
+columns and relationships of "cms.user"
+"""
+type cms_user {
+  email: String!
+  id: Int!
+
+  """An array relationship"""
+  posts(
+    """distinct select on columns"""
+    distinct_on: [cms_post_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [cms_post_order_by!]
+
+    """filter the rows returned"""
+    where: cms_post_bool_exp
+  ): [cms_post!]!
+
+  """An aggregate relationship"""
+  posts_aggregate(
+    """distinct select on columns"""
+    distinct_on: [cms_post_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [cms_post_order_by!]
+
+    """filter the rows returned"""
+    where: cms_post_bool_exp
+  ): cms_post_aggregate!
+  role: String!
+  username: String!
+}
+
+"""
+aggregated selection of "cms.user"
+"""
+type cms_user_aggregate {
+  aggregate: cms_user_aggregate_fields
+  nodes: [cms_user!]!
+}
+
+"""
+aggregate fields of "cms.user"
+"""
+type cms_user_aggregate_fields {
+  avg: cms_user_avg_fields
+  count(columns: [cms_user_select_column!], distinct: Boolean): Int!
+  max: cms_user_max_fields
+  min: cms_user_min_fields
+  stddev: cms_user_stddev_fields
+  stddev_pop: cms_user_stddev_pop_fields
+  stddev_samp: cms_user_stddev_samp_fields
+  sum: cms_user_sum_fields
+  var_pop: cms_user_var_pop_fields
+  var_samp: cms_user_var_samp_fields
+  variance: cms_user_variance_fields
+}
+
+"""aggregate avg on columns"""
+type cms_user_avg_fields {
+  id: Float
+}
+
+"""
+Boolean expression to filter rows from the table "cms.user". All fields are combined with a logical 'AND'.
+"""
+input cms_user_bool_exp {
+  _and: [cms_user_bool_exp!]
+  _not: cms_user_bool_exp
+  _or: [cms_user_bool_exp!]
+  email: String_comparison_exp
+  id: Int_comparison_exp
+  posts: cms_post_bool_exp
+  posts_aggregate: cms_post_aggregate_bool_exp
+  role: String_comparison_exp
+  username: String_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "cms.user"
+"""
+enum cms_user_constraint {
+  """
+  unique or primary key constraint on columns "id"
+  """
+  author_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "cms.user"
+"""
+input cms_user_inc_input {
+  id: Int
+}
+
+"""
+input type for inserting data into table "cms.user"
+"""
+input cms_user_insert_input {
+  email: String
+  id: Int
+  posts: cms_post_arr_rel_insert_input
+  role: String
+  username: String
+}
+
+"""aggregate max on columns"""
+type cms_user_max_fields {
+  email: String
+  id: Int
+  role: String
+  username: String
+}
+
+"""aggregate min on columns"""
+type cms_user_min_fields {
+  email: String
+  id: Int
+  role: String
+  username: String
+}
+
+"""
+response of any mutation on the table "cms.user"
+"""
+type cms_user_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [cms_user!]!
+}
+
+"""
+input type for inserting object relation for remote table "cms.user"
+"""
+input cms_user_obj_rel_insert_input {
+  data: cms_user_insert_input!
+
+  """upsert condition"""
+  on_conflict: cms_user_on_conflict
+}
+
+"""
+on_conflict condition type for table "cms.user"
+"""
+input cms_user_on_conflict {
+  constraint: cms_user_constraint!
+  update_columns: [cms_user_update_column!]! = []
+  where: cms_user_bool_exp
+}
+
+"""Ordering options when selecting data from "cms.user"."""
+input cms_user_order_by {
+  email: order_by
+  id: order_by
+  posts_aggregate: cms_post_aggregate_order_by
+  role: order_by
+  username: order_by
+}
+
+"""primary key columns input for table: cms.user"""
+input cms_user_pk_columns_input {
+  id: Int!
+}
+
+"""
+select columns of table "cms.user"
+"""
+enum cms_user_select_column {
+  """column name"""
+  email
+
+  """column name"""
+  id
+
+  """column name"""
+  role
+
+  """column name"""
+  username
+}
+
+"""
+input type for updating data in table "cms.user"
+"""
+input cms_user_set_input {
+  email: String
+  id: Int
+  role: String
+  username: String
+}
+
+"""aggregate stddev on columns"""
+type cms_user_stddev_fields {
+  id: Float
+}
+
+"""aggregate stddev_pop on columns"""
+type cms_user_stddev_pop_fields {
+  id: Float
+}
+
+"""aggregate stddev_samp on columns"""
+type cms_user_stddev_samp_fields {
+  id: Float
+}
+
+"""
+Streaming cursor of the table "cms_user"
+"""
+input cms_user_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: cms_user_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input cms_user_stream_cursor_value_input {
+  email: String
+  id: Int
+  role: String
+  username: String
+}
+
+"""aggregate sum on columns"""
+type cms_user_sum_fields {
+  id: Int
+}
+
+"""
+update columns of table "cms.user"
+"""
+enum cms_user_update_column {
+  """column name"""
+  email
+
+  """column name"""
+  id
+
+  """column name"""
+  role
+
+  """column name"""
+  username
+}
+
+input cms_user_updates {
+  """increments the numeric columns with given value of the filtered values"""
+  _inc: cms_user_inc_input
+
+  """sets the columns of the filtered rows to the given values"""
+  _set: cms_user_set_input
+
+  """filter the rows which have to be updated"""
+  where: cms_user_bool_exp!
+}
+
+"""aggregate var_pop on columns"""
+type cms_user_var_pop_fields {
+  id: Float
+}
+
+"""aggregate var_samp on columns"""
+type cms_user_var_samp_fields {
+  id: Float
+}
+
+"""aggregate variance on columns"""
+type cms_user_variance_fields {
+  id: Float
+}
+
+"""ordering argument of a cursor"""
+enum cursor_ordering {
+  """ascending ordering of the cursor"""
+  ASC
+
+  """descending ordering of the cursor"""
+  DESC
+}
+
+"""mutation root"""
+type mutation_root {
+  """
+  delete data from the table: "cms.post"
+  """
+  delete_cms_post(
+    """filter the rows which have to be deleted"""
+    where: cms_post_bool_exp!
+  ): cms_post_mutation_response
+
+  """
+  delete single row from the table: "cms.post"
+  """
+  delete_cms_post_by_pk(id: Int!): cms_post
+
+  """
+  delete data from the table: "cms.user"
+  """
+  delete_cms_user(
+    """filter the rows which have to be deleted"""
+    where: cms_user_bool_exp!
+  ): cms_user_mutation_response
+
+  """
+  delete single row from the table: "cms.user"
+  """
+  delete_cms_user_by_pk(id: Int!): cms_user
+
+  """
+  insert data into the table: "cms.post"
+  """
+  insert_cms_post(
+    """the rows to be inserted"""
+    objects: [cms_post_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: cms_post_on_conflict
+  ): cms_post_mutation_response
+
+  """
+  insert a single row into the table: "cms.post"
+  """
+  insert_cms_post_one(
+    """the row to be inserted"""
+    object: cms_post_insert_input!
+
+    """upsert condition"""
+    on_conflict: cms_post_on_conflict
+  ): cms_post
+
+  """
+  insert data into the table: "cms.user"
+  """
+  insert_cms_user(
+    """the rows to be inserted"""
+    objects: [cms_user_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: cms_user_on_conflict
+  ): cms_user_mutation_response
+
+  """
+  insert a single row into the table: "cms.user"
+  """
+  insert_cms_user_one(
+    """the row to be inserted"""
+    object: cms_user_insert_input!
+
+    """upsert condition"""
+    on_conflict: cms_user_on_conflict
+  ): cms_user
+
+  """
+  update data of the table: "cms.post"
+  """
+  update_cms_post(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: cms_post_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: cms_post_set_input
+
+    """filter the rows which have to be updated"""
+    where: cms_post_bool_exp!
+  ): cms_post_mutation_response
+
+  """
+  update single row of the table: "cms.post"
+  """
+  update_cms_post_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: cms_post_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: cms_post_set_input
+    pk_columns: cms_post_pk_columns_input!
+  ): cms_post
+
+  """
+  update multiples rows of table: "cms.post"
+  """
+  update_cms_post_many(
+    """updates to execute, in order"""
+    updates: [cms_post_updates!]!
+  ): [cms_post_mutation_response]
+
+  """
+  update data of the table: "cms.user"
+  """
+  update_cms_user(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: cms_user_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: cms_user_set_input
+
+    """filter the rows which have to be updated"""
+    where: cms_user_bool_exp!
+  ): cms_user_mutation_response
+
+  """
+  update single row of the table: "cms.user"
+  """
+  update_cms_user_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: cms_user_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: cms_user_set_input
+    pk_columns: cms_user_pk_columns_input!
+  ): cms_user
+
+  """
+  update multiples rows of table: "cms.user"
+  """
+  update_cms_user_many(
+    """updates to execute, in order"""
+    updates: [cms_user_updates!]!
+  ): [cms_user_mutation_response]
+}
+
+"""column ordering options"""
+enum order_by {
+  """in ascending order, nulls last"""
+  asc
+
+  """in ascending order, nulls first"""
+  asc_nulls_first
+
+  """in ascending order, nulls last"""
+  asc_nulls_last
+
+  """in descending order, nulls first"""
+  desc
+
+  """in descending order, nulls first"""
+  desc_nulls_first
+
+  """in descending order, nulls last"""
+  desc_nulls_last
+}
+
+type query_root {
+  """
+  fetch data from the table: "cms.post"
+  """
+  cms_post(
+    """distinct select on columns"""
+    distinct_on: [cms_post_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [cms_post_order_by!]
+
+    """filter the rows returned"""
+    where: cms_post_bool_exp
+  ): [cms_post!]!
+
+  """
+  fetch aggregated fields from the table: "cms.post"
+  """
+  cms_post_aggregate(
+    """distinct select on columns"""
+    distinct_on: [cms_post_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [cms_post_order_by!]
+
+    """filter the rows returned"""
+    where: cms_post_bool_exp
+  ): cms_post_aggregate!
+
+  """fetch data from the table: "cms.post" using primary key columns"""
+  cms_post_by_pk(id: Int!): cms_post
+
+  """
+  fetch data from the table: "cms.user"
+  """
+  cms_user(
+    """distinct select on columns"""
+    distinct_on: [cms_user_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [cms_user_order_by!]
+
+    """filter the rows returned"""
+    where: cms_user_bool_exp
+  ): [cms_user!]!
+
+  """
+  fetch aggregated fields from the table: "cms.user"
+  """
+  cms_user_aggregate(
+    """distinct select on columns"""
+    distinct_on: [cms_user_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [cms_user_order_by!]
+
+    """filter the rows returned"""
+    where: cms_user_bool_exp
+  ): cms_user_aggregate!
+
+  """fetch data from the table: "cms.user" using primary key columns"""
+  cms_user_by_pk(id: Int!): cms_user
+}
+
+type subscription_root {
+  """
+  fetch data from the table: "cms.post"
+  """
+  cms_post(
+    """distinct select on columns"""
+    distinct_on: [cms_post_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [cms_post_order_by!]
+
+    """filter the rows returned"""
+    where: cms_post_bool_exp
+  ): [cms_post!]!
+
+  """
+  fetch aggregated fields from the table: "cms.post"
+  """
+  cms_post_aggregate(
+    """distinct select on columns"""
+    distinct_on: [cms_post_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [cms_post_order_by!]
+
+    """filter the rows returned"""
+    where: cms_post_bool_exp
+  ): cms_post_aggregate!
+
+  """fetch data from the table: "cms.post" using primary key columns"""
+  cms_post_by_pk(id: Int!): cms_post
+
+  """
+  fetch data from the table in a streaming manner: "cms.post"
+  """
+  cms_post_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [cms_post_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: cms_post_bool_exp
+  ): [cms_post!]!
+
+  """
+  fetch data from the table: "cms.user"
+  """
+  cms_user(
+    """distinct select on columns"""
+    distinct_on: [cms_user_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [cms_user_order_by!]
+
+    """filter the rows returned"""
+    where: cms_user_bool_exp
+  ): [cms_user!]!
+
+  """
+  fetch aggregated fields from the table: "cms.user"
+  """
+  cms_user_aggregate(
+    """distinct select on columns"""
+    distinct_on: [cms_user_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [cms_user_order_by!]
+
+    """filter the rows returned"""
+    where: cms_user_bool_exp
+  ): cms_user_aggregate!
+
+  """fetch data from the table: "cms.user" using primary key columns"""
+  cms_user_by_pk(id: Int!): cms_user
+
+  """
+  fetch data from the table in a streaming manner: "cms.user"
+  """
+  cms_user_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [cms_user_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: cms_user_bool_exp
+  ): [cms_user!]!
+}
+
+scalar timestamptz
+
+"""
+Boolean expression to compare columns of type "timestamptz". All fields are combined with logical 'AND'.
+"""
+input timestamptz_comparison_exp {
+  _eq: timestamptz
+  _gt: timestamptz
+  _gte: timestamptz
+  _in: [timestamptz!]
+  _is_null: Boolean
+  _lt: timestamptz
+  _lte: timestamptz
+  _neq: timestamptz
+  _nin: [timestamptz!]
+}

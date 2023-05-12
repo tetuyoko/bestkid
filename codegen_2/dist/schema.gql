@@ -1,0 +1,13 @@
+schema {
+  query: Query
+}
+
+type Query {
+  recipe(id: Int!): Recipe!
+}
+
+type Recipe {
+  id: Int!
+  imageUrl: String
+  title: String!
+}

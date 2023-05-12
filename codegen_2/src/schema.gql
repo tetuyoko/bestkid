@@ -1,0 +1,10 @@
+type Query {
+  recipe(id: Int!): Recipe!
+}
+
+type Recipe {
+  id: Int!
+  title: String!
+  imageUrl: String
+}
+
