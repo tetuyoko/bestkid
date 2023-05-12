@@ -28,3 +28,10 @@ export type Recipe = {
   imageUrl?: Maybe<Scalars['String']>;
   title: Scalars['String'];
 };
+
+export type GetRecipeQueryVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type GetRecipeQuery = { __typename?: 'Query', recipe: { __typename?: 'Recipe', id: number, title: string, imageUrl?: string | null } };
