@@ -1,2 +1,15 @@
 karate/results/
 temp/
+
+# Dependency directories
+node_modules/
+
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+
+# Output of 'npm pack'
+*.tgz
+
