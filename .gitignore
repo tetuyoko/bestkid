@@ -1,3 +1,7 @@
+hasura/metadata/
+hasura/migrations/
+hasura/seeds/
+
 karate/results/
 temp/
 

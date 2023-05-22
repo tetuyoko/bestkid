@@ -8,13 +8,10 @@ Feature: Test Hasura Blog Engine GraphQL API
     * text query =
       """
         query {
-          cms_post {
-            id
-            author_id
-            user {
-              id
-              email
-            }
+          subdivisions {
+            display_order
+            name
+            code
           }
         }
       """
@@ -25,39 +22,60 @@ Feature: Test Hasura Blog Engine GraphQL API
     And match response == "#object"
     And match response.errors == '#notpresent'
 
-  Scenario: Test query getPosts
-      * text query =
-      """
-      query getPosts($author_id: Int, $status: String) {
-        cms_post(where: {author_id: {_eq: $author_id}, status: {_eq: $status}}) {
-          id
-          title
-          content
-          status
-          created_at
-          author_id
-          user {
-            username
-            role
-          }
-        }
-      }
-      """
+    #Scenario: TestSimpleQuery
+    #  * text query =
+    #    """
+    #      query {
+    #        cms_post {
+    #          id
+    #          author_id
+    #          user {
+    #            id
+    #            email
+    #          }
+    #        }
+    #      }
+    #    """
+    #  Given request { query: '#(query)' }
+    #  When method post
+    #  Then status 200
+    #  And print 'response:', response
+    #  And match response == "#object"
+    #  And match response.errors == '#notpresent'
 
-      * def variables =
-      """
-        {
-          "author_id": 1,
-          "status": "published"
-        }
-      """
-      And request { query: '#(query)', operationName: "getPosts", variables: '#(variables)' }
-      When method post
-      Then status 200
-      And print 'response:', response
-      And match response == "#object"
-      And match response.errors == '#notpresent'
-      And assert response.data.cms_post.length >= 1
+    #Scenario: Test query getPosts
+    #    * text query =
+    #    """
+    #    query getPosts($author_id: Int, $status: String) {
+    #      cms_post(where: {author_id: {_eq: $author_id}, status: {_eq: $status}}) {
+    #        id
+    #        title
+    #        content
+    #        status
+    #        created_at
+    #        author_id
+    #        user {
+    #          username
+    #          role
+    #        }
+    #      }
+    #    }
+    #    """
+
+    #    * def variables =
+    #    """
+    #      {
+    #        "author_id": 1,
+    #        "status": "published"
+    #      }
+    #    """
+    #    And request { query: '#(query)', operationName: "getPosts", variables: '#(variables)' }
+    #    When method post
+    #    Then status 200
+    #    And print 'response:', response
+    #    And match response == "#object"
+    #    And match response.errors == '#notpresent'
+    #    And assert response.data.cms_post.length >= 1
 
     #Scenario: Readers: Cannot View Drafts
     #    Given def query = read('getPosts.gql')
